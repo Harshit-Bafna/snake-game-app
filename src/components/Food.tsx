@@ -2,17 +2,21 @@ import { StyleSheet, Text } from 'react-native'
 import { JSX } from 'react/jsx-runtime'
 import { ICoordinate } from '../types/types'
 
+const CELL = 10
+
 const Food = ({ x, y }: ICoordinate): JSX.Element => {
-    return <Text style={[{ left: x * 10, top: y * 10 }, styles.food]}>🍎</Text>
+    return <Text style={[{ left: x * CELL, top: y * CELL }, styles.food]}>🍎</Text>
 }
 
 export default Food
 
 const styles = StyleSheet.create({
     food: {
-        width: 20,
-        height: 20,
-        borderRadius: 10,
-        position: 'absolute'
+        width: CELL * 2,
+        height: CELL * 2,
+        position: 'absolute',
+        textAlign: 'center',
+        lineHeight: CELL * 2,
+        fontSize: 16
     }
 })

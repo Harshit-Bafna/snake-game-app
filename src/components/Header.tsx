@@ -1,6 +1,5 @@
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
-import { FontAwesome } from '@expo/vector-icons'
+import { Ionicons, FontAwesome } from '@expo/vector-icons'
 import { JSX } from 'react'
 import { Colors } from '../styles/colors'
 
@@ -14,15 +13,18 @@ interface HeaderProps {
 export default function Header({ children, reloadGame, pauseGame, isPaused }: HeaderProps): JSX.Element {
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={reloadGame}>
+            <TouchableOpacity
+                onPress={reloadGame}
+                hitSlop={8}>
                 <Ionicons
                     name="reload-circle"
                     size={35}
                     color={Colors.primary}
                 />
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={pauseGame}>
+            <TouchableOpacity
+                onPress={pauseGame}
+                hitSlop={8}>
                 <FontAwesome
                     name={isPaused ? 'play-circle' : 'pause-circle'}
                     size={35}
@@ -45,7 +47,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         borderBottomWidth: 0,
-        padding: 15,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
         backgroundColor: Colors.background
     }
 })

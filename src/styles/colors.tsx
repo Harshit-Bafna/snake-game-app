@@ -1,6 +1,9 @@
 export const Colors = {
     primary: '#365314',
     secondary: '#84cc16',
-    tertiart: '#eab308',
-    background: '#ecfccb'
+    tertiary: '#eab308',
+    background: '#ecfccb',
+    gridLine: '#d9f99d',
+    snakeHead: '#1a2e07',
+    overlay: '#162805D1'
 }

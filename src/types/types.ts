@@ -1,7 +1,3 @@
-export interface IGestureEventType {
-    nativeEvent: { translationX: number; translationY: number }
-}
-
 export interface ICoordinate {
     x: number
     y: number
@@ -20,3 +16,5 @@ export interface IBoundaries {
     yMin: number
     yMax: number
 }
+
+export type TGameState = 'start' | 'playing' | 'paused' | 'over'
