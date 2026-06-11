@@ -1,0 +1,70 @@
+name: Build Android APK
+
+on:
+    push:
+        tags:
+            - 'v*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '24'
+                  cache: 'npm'
+
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: '17'
+
+            - name: Setup Android SDK
+              uses: android-actions/setup-android@v3
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Install Expo CLI
+              run: npm install -g expo-cli @expo/cli
+
+            - name: Run Expo Prebuild
+              run: npx expo prebuild --platform android --clean
+
+            - name: Decode keystore
+              run: |
+                  echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/snake-release-key.jks
+
+            - name: Build Release APK
+              run: |
+                  cd android
+                  ./gradlew assembleRelease \
+                    -Pandroid.injected.signing.store.file=$(pwd)/app/snake-release-key.jks \
+                    -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+                    -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+                    -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+            - name: Rename APK
+              run: |
+                  mv android/app/build/outputs/apk/release/app-release.apk snake-v${{ github.ref_name }}.apk
+
+            - name: Upload APK to GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: snake-v${{ github.ref_name }}.apk
+                  name: Snake App ${{ github.ref_name }}
+                  body: |
+                      ## Snake App ${{ github.ref_name }}
+
+                      ### Install Instructions
+                      1. Download the APK file below
+                      2. On your Android phone go to Settings → Install unknown apps → allow your browser
+                      3. Open the downloaded APK and install
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
